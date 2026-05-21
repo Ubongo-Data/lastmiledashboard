@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LastMileReach 2026 — Ubongo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --green:#1D9E75;--gl:#E1F5EE;--gd:#0F6E56;--blue:#378ADD;--bl:#E6F1FB;
+  --amber:#EF9F27;--al:#FAEEDA;--red:#E24B4A;--rl:#FCEBEB;
+  --g50:#F8F9FA;--g100:#F1F3F5;--g200:#E9ECEF;--g300:#DEE2E6;
+  --g400:#CED4DA;--g500:#ADB5BD;--g600:#868E96;--g700:#495057;--g900:#212529;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:10px;--rs:6px;--sh:0 1px 4px rgba(0,0,0,.07);--shm:0 4px 20px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:#EEF2EE;color:var(--g900);font-size:14px;line-height:1.5;min-height:100vh}
+.screen{display:none}.screen.active{display:block}
+#loginScreen{min-height:100vh;display:none;align-items:center;justify-content:center;background:linear-gradient(140deg,#083D2C 0%,#0F6E56 45%,#1D9E75 100%)}
+#loginScreen.active{display:flex}
+.lbox{background:#fff;border-radius:18px;padding:2.5rem 2rem;width:min(390px,93vw);box-shadow:var(--shm)}
+.llogo{width:52px;height:52px;border-radius:14px;background:var(--gl);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:26px;color:var(--green)}
+.ltitle{text-align:center;font-size:21px;font-weight:600;margin-bottom:3px}
+.lsub{text-align:center;font-size:12px;color:var(--g500);margin-bottom:1.75rem}
+#dashboardScreen{display:none;min-height:100vh}
+#dashboardScreen.active{display:flex}
+.sb{width:235px;min-height:100vh;background:#fff;border-right:1px solid var(--g200);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
+.sblogo{padding:1.25rem;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:10px}
+.sbicon{width:36px;height:36px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.sbtext{font-size:13px;font-weight:600;line-height:1.2}.sbyear{font-size:11px;color:var(--g500);font-weight:400}
+.sbnav{padding:.75rem;flex:1}
+.navlbl{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;padding:0 .5rem;margin:1rem 0 .35rem}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--rs);font-size:13px;color:var(--g600);cursor:pointer;transition:all .15s;margin-bottom:2px}
+.ni:hover{background:var(--g50);color:var(--g900)}.ni.active{background:var(--gl);color:var(--gd);font-weight:500}.ni i{font-size:16px}
+.sbfoot{padding:.75rem;border-top:1px solid var(--g100)}
+.uchip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--rs);margin-bottom:6px}
+.uav{width:34px;height:34px;border-radius:50%;background:var(--gl);color:var(--gd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.uname{font-size:12px;font-weight:600;line-height:1.2}.urole{font-size:11px;color:var(--g500)}
+.logoutbtn{width:100%;padding:7px;border:1px solid var(--g200);border-radius:var(--rs);background:none;font-family:var(--font);font-size:12px;color:var(--g600);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.logoutbtn:hover{background:var(--g50)}
+.main{flex:1;padding:1.5rem;min-width:0;overflow-x:hidden}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
+.ptitle{font-size:20px;font-weight:600}.psub{font-size:13px;color:var(--g500);margin-top:2px}
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--g200);padding:1.25rem;box-shadow:var(--sh);margin-bottom:1.25rem}
+.ctitle{font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1.25rem}
+.mc{background:#fff;border-radius:var(--r);border:1px solid var(--g200);padding:1rem 1.25rem;box-shadow:var(--sh)}
+.ml{font-size:11px;font-weight:500;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.mv{font-size:24px;font-weight:600;font-family:var(--mono);line-height:1}
+.ms{font-size:11px;color:var(--g400);margin-top:5px}
+.mbg{display:inline-block;margin-top:5px;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.pb{height:7px;background:var(--g100);border-radius:4px;overflow:hidden}
+.pf{height:100%;background:var(--green);border-radius:4px;transition:width .7s}
+.fl{display:block;font-size:12px;font-weight:500;color:var(--g600);margin-bottom:4px}
+.fg{margin-bottom:12px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select,textarea{width:100%;padding:8px 11px;border:1px solid var(--g300);border-radius:var(--rs);font-family:var(--font);font-size:13px;color:var(--g900);background:#fff;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green)}
+.pin{letter-spacing:8px;text-align:center;font-size:18px;font-family:var(--mono)}
+.btn{cursor:pointer;font-family:var(--font);font-size:13px;padding:8px 16px;border-radius:var(--rs);border:1px solid var(--g300);background:#fff;color:var(--g700);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--g50)}.bp{background:var(--green);border-color:var(--green);color:#fff}.bp:hover{background:var(--gd)}
+.bsm{padding:5px 10px;font-size:12px}.bic{padding:5px;width:28px;height:28px;justify-content:center}
+.bd{border-color:#F09595;color:var(--red)}.bd:hover{background:var(--rl)}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.tg{background:var(--gl);color:var(--gd)}.ta{background:var(--al);color:#7A5000}
+.tb{background:var(--bl);color:#0C447C}.tgr{background:var(--g100);color:var(--g600)}.tr{background:var(--rl);color:#7A1F1F}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--g200);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--g100);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--g50)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.cc{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .15s;box-shadow:var(--sh)}
+.cc:hover{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.ccn{font-size:13px;font-weight:600;margin-bottom:3px}
+.ccr{font-size:20px;font-weight:600;font-family:var(--mono);color:var(--green)}
+.ccg{font-size:11px;color:var(--g400);margin-top:1px}
+.sr{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .15s;margin-bottom:8px;box-shadow:var(--sh)}
+.sr:hover{border-color:var(--green)}
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.mov.open{display:flex}
+.modal{background:#fff;border-radius:var(--r);padding:1.5rem;width:min(540px,100%);box-shadow:var(--shm)}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.mtitle{font-size:16px;font-weight:600}
+.bbk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g500);cursor:pointer;margin-bottom:1.25rem}
+.bbk:hover{color:var(--g900)}
+.div{border:none;border-top:1px solid var(--g100);margin:1rem 0}
+.err{font-size:12px;color:var(--red);text-align:center;margin-top:8px;min-height:18px}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--g400)}
+.empty i{font-size:38px;margin-bottom:8px;display:block}
+.cg2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:860px){.cg2{grid-template-columns:1fr}}
+.mbnav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--g200);z-index:100}
+.mni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--g400);cursor:pointer;padding:8px 0}
+.mni.active{color:var(--green)}.mni i{font-size:20px}
+@media(max-width:680px){.sb{display:none}.mbnav{display:flex}.main{padding:1rem;padding-bottom:5rem}.fr{grid-template-columns:1fr}}
+@media print{
+  .sb,.mbnav,.logoutbtn,.btn{display:none!important}
+  #dashboardScreen{display:block!important}
+  .main{padding:.5rem}
+  .card{page-break-inside:avoid}
+  #page-overview{display:block!important}
+  #page-countries,#page-partners,#page-manage{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="screen active">
+  <div class="lbox">
+    <div class="llogo"><i class="ti ti-map-2"></i></div>
+    <div class="ltitle">LastMileReach 2026</div>
+    <div class="lsub">Ubongo &middot; Regional Manager Dashboard</div>
+    <div id="lf">
+      <div class="fg"><label class="fl">Email address</label><input type="email" id="le" placeholder="you@ubongo.org" autocomplete="email" onblur="hintRole()"></div>
+      <div class="fg"><label class="fl">4-digit passcode</label><input type="password" id="lp" class="pin" maxlength="4" placeholder="&bull;&bull;&bull;&bull;"></div>
+      <div id="roleHint" style="font-size:12px;color:var(--green);margin-bottom:10px;min-height:18px;font-weight:500"></div>
+      <button class="btn bp" style="width:100%;justify-content:center" onclick="doLogin()">Sign in</button>
+      <p style="text-align:center;font-size:12px;color:var(--g400);margin-top:10px">No account? <span style="color:var(--green);cursor:pointer;font-weight:500" onclick="toggleAuth('reg')">Create one</span></p>
+    </div>
+    <div id="rf" style="display:none">
+      <div class="fr" style="margin-bottom:10px">
+        <div class="fg" style="margin:0"><label class="fl">Full name</label><input type="text" id="rn" placeholder="Your name"></div>
+        <div class="fg" style="margin:0"><label class="fl">Assigned role</label><input type="text" id="rr" placeholder="Enter email first" readonly style="background:var(--g50);color:var(--g600)"></div>
+      </div>
+      <div class="fg"><label class="fl">Email address</label><input type="email" id="re" placeholder="you@ubongo.org" oninput="syncRole()"></div>
+      <div class="fg"><label class="fl">Create 4-digit passcode</label><input type="password" id="rp" class="pin" maxlength="4" placeholder="&bull;&bull;&bull;&bull;"></div>
+      <button class="btn bp" style="width:100%;justify-content:center" onclick="doRegister()">Create account</button>
+      <p style="text-align:center;font-size:12px;color:var(--g400);margin-top:10px"><span style="color:var(--green);cursor:pointer" onclick="toggleAuth('login')">Back to sign in</span></p>
+    </div>
+    <div id="ae" class="err"></div>
+  </div>
+</div>
+
+<div id="dashboardScreen" class="screen">
+  <aside class="sb">
+    <div class="sblogo">
+      <div class="sbicon"><i class="ti ti-map-2"></i></div>
+      <div><div class="sbtext">LastMileReach</div><div class="sbyear">2026 &middot; Ubongo</div></div>
+    </div>
+    <nav class="sbnav">
+      <div class="ni active" onclick="showPage('overview',this)"><i class="ti ti-home"></i>Overview</div>
+      <div class="ni" onclick="showPage('countries',this)"><i class="ti ti-map-pin"></i>Countries</div>
+      <div class="ni" onclick="showPage('partners',this)"><i class="ti ti-search"></i>Search partners</div>
+
+    </nav>
+    <div class="sbfoot">
+      <div class="uchip">
+        <div class="uav" id="uav">KM</div>
+        <div><div class="uname" id="uname">&mdash;</div><div class="urole" id="urole">&mdash;</div></div>
+      </div>
+      <button class="logoutbtn" onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px"></i>Sign out</button>
+    </div>
+  </aside>
+  <main class="main">
+    <div id="page-overview">
+      <div class="ph">
+        <div><div class="ptitle">Overview</div><div class="psub" id="ovSub">2026 reach tracking</div></div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--g500);background:var(--g50);border:1px solid var(--g200);border-radius:20px;padding:3px 10px">
+            <span id="dataDot" style="width:6px;height:6px;border-radius:50%;background:var(--g300);flex-shrink:0;display:inline-block"></span>
+            <span id="dataStatus">Loading...</span>
+          </div>
+          <button class="btn bsm" id="refreshBtn" onclick="loadLiveData(true)"><i class="ti ti-refresh"></i>Refresh</button>
+          <button class="btn" onclick="doLogout()" style="color:var(--red);border-color:#F09595"><i class="ti ti-logout"></i>Sign out</button>
+        </div>
+      </div>
+      <div class="mg" id="mGrid"></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;color:var(--g500)">Progress toward 2026 end year goal (6,400,000)</span>
+          <span style="font-size:12px;font-weight:600" id="progLbl">&mdash;</span>
+        </div>
+        <div class="pb"><div class="pf" id="progBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--g400);margin-top:5px" id="progRem"></div>
+      </div>
+      <div class="card" id="partnerTargetCard">
+        <!-- filled by renderOverview -->
+      </div>
+
+      <div class="cg2">
+        <div class="card">
+          <div class="ctitle">Top countries by reach</div>
+          <div style="position:relative;height:260px"><canvas id="cChart" role="img" aria-label="Top countries by children reached"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Reach type breakdown</div>
+          <div style="position:relative;height:175px"><canvas id="bChart" role="img" aria-label="Last mile vs conflict breakdown"></canvas></div>
+          <div id="bLeg" style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-size:11px;color:var(--g500)"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Reach per country</div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem">
+          <div style="position:relative;height:270px;min-width:240px;flex:1"><canvas id="pChart" role="img" aria-label="Reach per country pie chart"></canvas></div>
+          <div id="pLeg" style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:5px;font-size:12px"></div>
+        </div>
+      </div>
+      <div class="card" id="downloadCard">
+        <div class="ctitle">Export &amp; share</div>
+        <div style="font-size:13px;color:var(--g600);margin-bottom:1rem">Download a summary of LastMileReach 2026 progress for presentations or reporting.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn bp" onclick="exportSlides()"><i class="ti ti-presentation"></i>Download slides (HTML)</button>
+          <button class="btn" onclick="exportCSV()"><i class="ti ti-table-export"></i>Export partners CSV</button>
+          <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i>Print / Save PDF</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ctitle">2026 programme targets</div>
+        <div class="tw"><table><thead><tr><th>Country</th><th>Programme</th><th>Goal</th><th>Reached</th><th>Remaining</th><th>Status</th></tr></thead>
+        <tbody id="ovTbody"></tbody></table></div>
+      </div>
+    </div>
+    <div id="page-countries" style="display:none">
+      <div id="cListView">
+        <div class="ph"><div><div class="ptitle">Countries</div><div class="psub">Select a country to view detailed data</div></div><button class="btn" onclick="doLogout()" style="color:var(--red);border-color:#F09595"><i class="ti ti-logout"></i>Sign out</button></div>
+        <div class="cg" id="cGrid"></div>
+      </div>
+      <div id="cDetailView" style="display:none">
+        <div class="bbk" onclick="backToC()"><i class="ti ti-arrow-left"></i>All countries</div>
+        <div id="cDetailContent"></div>
+      </div>
+    </div>
+    <div id="page-partners" style="display:none">
+      <div class="ph"><div><div class="ptitle">Search partners</div><div class="psub" id="partnerCount">Loading...</div></div><button class="btn" onclick="doLogout()" style="color:var(--red);border-color:#F09595"><i class="ti ti-logout"></i>Sign out</button></div>
+      <div style="display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+        <div style="flex:1;min-width:180px;position:relative">
+          <i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:14px"></i>
+          <input type="text" id="psearch" placeholder="Search by name, contact, country..." style="padding-left:32px" oninput="renderPartners()" onkeydown="if(event.key===\'Enter\')renderPartners()">
+        </div>
+        <select id="pcf" onchange="renderPartners()" style="width:auto;min-width:130px"><option value="">All countries</option></select>
+        <select id="psf" onchange="renderPartners()" style="width:auto;min-width:120px">
+          <option value="">All statuses</option>
+          <option>Stewardship</option><option>Contracting</option><option>Initiating</option>
+          <option>Prospecting</option><option>No Progress</option>
+        </select>
+      </div>
+      <div id="pListView"></div>
+      <div id="pDetailView" style="display:none"></div>
+    </div>
+
+  </main>
+  <div class="mbnav">
+    <div class="mni active" onclick="showPage('overview',this,1)"><i class="ti ti-home"></i>Overview</div>
+    <div class="mni" onclick="showPage('countries',this,1)"><i class="ti ti-map-pin"></i>Countries</div>
+    <div class="mni" onclick="showPage('partners',this,1)"><i class="ti ti-search"></i>Partners</div>
+
+  </div>
+</div>
+
+<!-- LOCK SCREEN OVERLAY -->
+<div id="lockScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(140deg,#083D2C 0%,#0F6E56 45%,#1D9E75 100%);z-index:9999;align-items:center;justify-content:center">
+  <div class="lbox" style="text-align:center">
+    <div class="llogo"><i class="ti ti-lock"></i></div>
+    <div class="ltitle">Dashboard locked</div>
+    <div class="lsub" id="lockMsg">Enter your passcode to continue</div>
+    <div class="fg" style="margin-bottom:8px">
+      <input type="password" id="lockPin" class="pin" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter')doUnlock()">
+    </div>
+    <button class="btn bp" style="width:100%;justify-content:center" onclick="doUnlock()">Unlock</button>
+    <div id="lockErr" class="err"></div>
+    <p style="font-size:11px;color:var(--g400);margin-top:12px">Signed in as <span id="lockEmail" style="color:var(--green)"></span></p>
+  </div>
+</div>
+
+
+<script>
+const ALLOWED={
+  'kaitan@ubongo.org':'Admin',
+  'sammy@ubongo.org':'Admin',
+  'emily@ubongo.org':'Distribution Coordinator',
+  'kibathi@ubongo.org':'Children in Conflict Manager',
+  'sunday@ubongo.org':'West Africa (Anglophone)',
+  'isaie@ubongo.org':'Francophone Africa',
+  'fatsani@ubongo.org':'Southern Africa',
+};
+// Role resolution: named roles above, any @ubongo.org gets Viewer
+function resolveRole(email){
+  return ALLOWED[email] || (email.endsWith('@ubongo.org') ? 'Viewer' : null);
+}
+
+
+const ROWS2026=[
+  {c:'Tanzania',p:'Ubongo',goal:500000,reach:0,notes:'Banda Jamii + CSSC'},
+  {c:'Children in Conflict - Uganda',p:'Ubongo',goal:70000,reach:0,notes:''},
+  {c:'Children in Conflict - Kenya',p:'Porticus',goal:30000,reach:0,notes:''},
+  {c:'Children in Conflict - Tanzania',p:'Ubongo',goal:20000,reach:0,notes:''},
+  {c:'Uganda',p:'Ubongo',goal:40000,reach:0,notes:'5 MOU partners'},
+  {c:'Kenya',p:'Ubongo',goal:100000,reach:0,notes:'Porticus + Partnerships'},
+  {c:'Rwanda',p:'Ubongo',goal:50000,reach:0,notes:'Resource Libraries'},
+  {c:'Malawi',p:'Ubongo',goal:50000,reach:31700,notes:'Resource Libraries'},
+  {c:'Zambia',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Nigeria',p:'Ubongo',goal:200000,reach:0,notes:''},
+  {c:'DRC',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:"Cote D\'Ivoire",p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Ethiopia',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Niger',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Ghana',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'South Africa',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Cameroon',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Mozambique',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Angola',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Senegal',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Madagascar',p:'Ubongo',goal:10000,reach:0,notes:''},
+  {c:'Burkina Faso',p:'Ubongo',goal:10000,reach:0,notes:''},
+];
+const GOAL2026=6400000;
+const BASELINE2025=5192896;
+const SHEET_TABS={
+  '2026 Dashboard':610281629,
+  'Kenya':1347978068,
+  'Uganda':2089392323,
+  'Rwanda':15591810,
+  'Malawi':2103750067,
+  'Zambia':1416763085,
+  'Nigeria':1444442744,
+  'DRC':1863022955,
+  "Cote D\'Ivoire":161697879,
+  'Ethiopia':295650605,
+  'Niger':717778448,
+  'Ghana':911592248,
+  'South Africa':1096625654,
+  'Cameroon':2028118224,
+  'Tanzania':824760060,
+  'Mozambique':1698647350,
+  'Angola':1340136924,
+  'Senegal':596780794,
+  'Madagascar':740815262,
+  'Burkina Faso':117992005,
+  'Children in Conflict':1028315625,
+};
+const SHEET_BASE='https://docs.google.com/spreadsheets/d/e/2PACX-1vSveOOsFGTDnp2BtXiclDAYPFkk_00jkI8Zuj9fUTKqyTHfQE2_FUMKSMDGBA8ghTL00DEFp-PuL3Ym/pub';
+function csvUrl(gid){return SHEET_BASE+'?gid='+gid+'&single=true&output=csv';}
+
+const CONFLICT_REACH=60587;
+const SHEET_PARTNERS=[
+{id:"sp1",name:"Blue Cross Kenya",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Renewed",contact:"Brian Magwaro",email:"",phone:"254721116324",reach:5000,sessions:0,equipment:"Yes",notes:""},
+{id:"sp2",name:"SOS Children Village Nairobi",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Ended",contact:"Francis Muthoma",email:"",phone:"711590850",reach:1000,sessions:0,equipment:"Yes",notes:""},
+{id:"sp3",name:"Serve a Village",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Victor Gonyo",email:"brian@bluecrosskenya.org",phone:"254714508558",reach:2200,sessions:0,equipment:"Yes",notes:""},
+{id:"sp4",name:"Sunrise Virtual School",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Ben Kairu",email:"ben@sunrisevirtualschool.com",phone:"254723907707",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp5",name:"Kenya National Library",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Purity Kavuri",email:"purity.kavuri@knls.ac.ke",phone:"254721286389",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp6",name:"Transform A Life-Africa",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Expired",contact:"James Gitiro",email:"gytroljames@gmail.com",phone:"254705654441",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp7",name:"Asante Africa Kenya",country:"Kenya",status:"Contracting",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp8",name:"Savana CBO",country:"Kenya",status:"Contracting",engagement:"Penetration",mou:"Sent",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp9",name:"Kenya Connect",country:"Kenya",status:"Contracting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:"To revisit in August"},
+{id:"sp10",name:"Kitui County Disability Network",country:"Kenya",status:"Contracting",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp11",name:"National Council of Churches of Kenya - Kitui",country:"Kenya",status:"Contracting",engagement:"Entry",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp12",name:"Human Practice",country:"Kenya",status:"No Progress",engagement:"Penetration",mou:"Blocked",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp13",name:"Rotary Kenya",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:"Partner not responsive"},
+{id:"sp14",name:"Mission of Hope International",country:"Kenya",status:"No Progress",engagement:"Growth",mou:"Ended",contact:"Jeniffer",email:"",phone:"722627265",reach:30000,sessions:0,equipment:"Yes",notes:""},
+{id:"sp15",name:"Wanawake Wavuvi",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Ended",contact:"Jackline",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp16",name:"Oasis Mathare",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Ended",contact:"Ann",email:"",phone:"720622719",reach:250,sessions:0,equipment:"Yes",notes:""},
+{id:"sp17",name:"Agape Hope Children\'s Center",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Margaret",email:"",phone:"721511963",reach:400,sessions:0,equipment:"Yes",notes:""},
+{id:"sp18",name:"GRIC",country:"Kenya",status:"No Progress",engagement:"Penetration",mou:"Sent",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp19",name:"Teach For Kenya",country:"Kenya",status:"No Progress",engagement:"Penetration",mou:"Blocked",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp20",name:"Julie Hope Children and Rescue Centre",country:"Kenya",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp21",name:"Global Peace Foundation",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"",email:"",phone:"",reach:1200,sessions:0,equipment:"Yes",notes:""},
+{id:"sp22",name:"Wow Mum",country:"Kenya",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp23",name:"Loho Learning",country:"Kenya",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"",email:"",phone:"",reach:5089,sessions:0,equipment:"Yes",notes:""},
+{id:"sp24",name:"Build Africa Kenya",country:"Kenya",status:"Initiating",engagement:"Growth",mou:"In Progress",contact:"",email:"edina@build-africakenya.org",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp25",name:"RACIDA",country:"Kenya",status:"Initiating",engagement:"Growth",mou:"In Progress",contact:"Fred Ogeto",email:"fredogeto@racida.org",phone:"",reach:15000,sessions:0,equipment:"Yes",notes:""},
+{id:"sp26",name:"Weworld-Kenya",country:"Kenya",status:"Initiating",engagement:"Penetration",mou:"In Progress",contact:"Deagratias",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp27",name:"Compassion Kenya",country:"Kenya",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp28",name:"Voi Community Library",country:"Kenya",status:"Initiating",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp29",name:"CEDA International",country:"Uganda",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Rehmah Kasule",email:"rehmah@ceda-uganda.org",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp30",name:"Community Libraries Uganda",country:"Uganda",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Catherine Amia",email:"",phone:"25608629245",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp31",name:"War Child Holland",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"Lucy",email:"Acan.Lucy@warchild.net",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp32",name:"Zetu Africa",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"Anold",email:"arnold@zetuafrica.org",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp33",name:"East African Welfare Association",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"Siid Ahamed",email:"usciu99@gmail.com",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp34",name:"PANGEA",country:"Uganda",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"Edward Wozisi Drew",email:"",phone:"0709113253",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp35",name:"Build Africa Uganda",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp36",name:"L\'Arche Uganda",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"Edwin Wanyama",email:"",phone:"0783 343234",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp37",name:"Asante Africa Uganda",country:"Uganda",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp38",name:"Hope for Children Uganda",country:"Uganda",status:"Prospecting",engagement:"Entry",mou:"In Progress",contact:"Aisha",email:"",phone:"0789 927619",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp39",name:"Save the Children Rwanda",country:"Rwanda",status:"Stewardship",engagement:"Growth",mou:"Expired",contact:"Rwamuhinda Dina Denis",email:"Denis.Rwamuhinda@savethechildren.org",phone:"+250 788 505 497",reach:5000,sessions:0,equipment:"Solar-powered TV",notes:"Mahama Refugee Camp"},
+{id:"sp40",name:"Ministry of ICT and Innovation Rwanda",country:"Rwanda",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Lambert Ntagwabira",email:"lntagwabira@minict.gov.rw",phone:"+250 784 616 446",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp41",name:"4 Community Libraries Rwanda",country:"Rwanda",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Vestine Mukamurenzi",email:"mukamurvestine@gmail.com",phone:"+250 788 254 003",reach:8000,sessions:0,equipment:"Solar-powered TV",notes:""},
+{id:"sp42",name:"Soma Foundation Rwanda",country:"Rwanda",status:"Stewardship",engagement:"Growth",mou:"In Progress",contact:"Jean Philippe",email:"communication@sfrw.org",phone:"+250 798 748 795",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp43",name:"Rwanda Education Board",country:"Rwanda",status:"Stewardship",engagement:"Growth",mou:"In Progress",contact:"Shyaka Emmanuel",email:"eshyaka@reb.rw",phone:"+250 788 302 819",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp44",name:"Ubuntu Nation",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Lilian",email:"lilian.vogt@fraternidadesemfronteiras.org",phone:"265 991 22 62 75",reach:334,sessions:3,equipment:"TV + USB",notes:""},
+{id:"sp45",name:"National Library Service Malawi",country:"Malawi",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Bonney Sangole",email:"bwsangole@nls.mw",phone:"265 999 95 69 20",reach:150,sessions:3,equipment:"Solar TV + USB",notes:""},
+{id:"sp46",name:"YONECO",country:"Malawi",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Rodrick Mwale",email:"rcp@yoneco.org.mw",phone:"265 991 10 57 90",reach:245,sessions:3,equipment:"Solar TV + USB",notes:""},
+{id:"sp47",name:"Chiradzulu & Balaka District Education Offices",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"",contact:"Saulos Namani",email:"namanisaulospetros@yahoo.com",phone:"265 982 20 03 83",reach:4161,sessions:3,equipment:"Solar Projectors + Tablets",notes:"12 schools from JBJ edtech project"},
+{id:"sp48",name:"Child First Malawi",country:"Malawi",status:"Contracting",engagement:"Entry",mou:"Signed",contact:"Rabson Woodwell",email:"rwoodwell@childfirstmw.org",phone:"265 995 92 11 94",reach:400,sessions:3,equipment:"Bluetooth Speakers",notes:""},
+{id:"sp49",name:"Stephanos Foundation",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Thea Mawaya",email:"theamawaya@gmail.com",phone:"265 999 92 75 26",reach:460,sessions:3,equipment:"Solar TV + Tablets",notes:""},
+{id:"sp50",name:"Joshua Orphan and Community Care",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Steven Malasa",email:"steven.joshuainmalawi@gmail.com",phone:"265 888 90 08 20",reach:961,sessions:3,equipment:"Solar TV + Tablets",notes:""},
+{id:"sp51",name:"JRS Malawi",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Patrick Kamchikwe",email:"patrick.kamchikwe@jrs.net",phone:"265 998 12 86 98",reach:11348,sessions:3,equipment:"Solar TV + USB",notes:""},
+{id:"sp52",name:"Fast Networks",country:"Malawi",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Barros Mweso",email:"barros@fastnetworksafrica.com",phone:"265 995 97 49 44",reach:13641,sessions:3,equipment:"Computers, Projectors, Tablets",notes:""},
+{id:"sp53",name:"Dept of Open Distance and Elearning Malawi",country:"Malawi",status:"Prospecting",engagement:"Entry",mou:"",contact:"Samson Distone",email:"sdistone80@gmail.com",phone:"265 888 71 43 67",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp54",name:"World Vision Malawi",country:"Malawi",status:"Prospecting",engagement:"Entry",mou:"",contact:"Khumbo Kamanga",email:"khumbo_kamanga@wvi.org",phone:"265 999 71 27 16",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp55",name:"Imagine Worldwide",country:"Malawi",status:"Prospecting",engagement:"Entry",mou:"",contact:"Antonie Chigeda",email:"lizibowa@gmail.com",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp56",name:"Mwabu",country:"Zambia",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Jessica Kellerman",email:"jessica.kellerman@mwabu.com",phone:"",reach:0,sessions:0,equipment:"",notes:"Online learning platform"},
+{id:"sp57",name:"Edulution",country:"Zambia",status:"Prospecting",engagement:"Entry",mou:"",contact:"David Fair",email:"dfair@edulution.org",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp58",name:"VVOB Zambia",country:"Zambia",status:"Prospecting",engagement:"Entry",mou:"",contact:"Lyson Chikunduzi",email:"lyson.chikunduzi@vvob.org",phone:"260977780859",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp59",name:"Camara Education Zambia",country:"Zambia",status:"Prospecting",engagement:"",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp60",name:"Genius Education Zambia",country:"Zambia",status:"Prospecting",engagement:"",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp61",name:"Ministry of Education Zambia - ODE",country:"Zambia",status:"Prospecting",engagement:"",mou:"",contact:"Kunda Mando",email:"kundamando75@gmail.com",phone:"260976663377",reach:0,sessions:0,equipment:"TV/radio, Elearning",notes:""},
+{id:"sp62",name:"World Vision Zambia",country:"Zambia",status:"Prospecting",engagement:"",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp63",name:"Teach for Nigeria",country:"Nigeria",status:"Stewardship",engagement:"Growth",mou:"Renewed",contact:"Bosede Ogidan",email:"bosede@teachfornigeria.org",phone:"234806 625 8844",reach:250000,sessions:0,equipment:"TV/Tablets/Computers",notes:""},
+{id:"sp64",name:"Rotary Club of Gbagada",country:"Nigeria",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Olawoyin Abiodun Tosin",email:"olawoyintosin@gmail.com",phone:"234 802 351 7291",reach:20000,sessions:0,equipment:"Computers",notes:""},
+{id:"sp65",name:"Ashoka Academy Nigeria",country:"Nigeria",status:"Stewardship",engagement:"Growth",mou:"Renewed",contact:"Joseph Fayomi",email:"jfayomi@ashoka.org",phone:"2349011554184",reach:50000,sessions:0,equipment:"",notes:""},
+{id:"sp66",name:"Mapple Leaf Foundation",country:"Nigeria",status:"Stewardship",engagement:"Penetration",mou:"Renewed",contact:"Ifedinma Nwigwe",email:"ify.nwigwe@mleyfoundation.org",phone:"234 810 388 1316",reach:5000,sessions:0,equipment:"",notes:""},
+{id:"sp67",name:"Education in Emergency Working Group Nigeria",country:"Nigeria",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"James Cleobas",email:"james.cleobas@savethechildren.org",phone:"8030969826",reach:500000,sessions:0,equipment:"",notes:""},
+{id:"sp68",name:"EiEWG Nigeria IMO",country:"Nigeria",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"James Cleobas",email:"eiewg.nga.im@humanitarianresponse.info",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp69",name:"Ashoka Africa West Africa",country:"Nigeria",status:"Contracting",engagement:"Stewardship",mou:"Signed",contact:"Angelou Ezeilo",email:"aezeilo@ashoka.org",phone:"+2349155556804",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp70",name:"Presentation Brothers Nigeria",country:"Nigeria",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"Godfrey",email:"",phone:"233 20 484 9470",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp71",name:"UNICEF - DRC",country:"DRC",status:"Prospecting",engagement:"Growth",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp72",name:"World Vision - DRC",country:"DRC",status:"Prospecting",engagement:"Penetration",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp73",name:"SOS Village d Enfants DRC",country:"DRC",status:"Prospecting",engagement:"Penetration",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp74",name:"Invisible Children",country:"DRC",status:"Prospecting",engagement:"Penetration",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp75",name:"Save the Children International DRC",country:"DRC",status:"Prospecting",engagement:"Penetration",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp76",name:"Ruby International",country:"DRC",status:"Prospecting",engagement:"Penetration",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp77",name:"Bureau International Des Droits Des Enfants",country:"DRC",status:"Prospecting",engagement:"",mou:"Contacted",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp78",name:"Ministere de l\'Education Nationale MENA",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"Abdelkrim LORN",email:"ak.lorn@education.gouv.ci",phone:"+225 0709 210 302",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp79",name:"SICA Cote d\'Ivoire",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"M. Karl-Boluwa",email:"karlboluwa10@gmail.com",phone:"+225 0787687061",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp80",name:"Ministere de la Culture et de la Francophonie",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"culture.gouv.ci@gmail.com",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp81",name:"VIVA STREAM",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"assistance@vivastream.app",phone:"+1 785-302-9125",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp82",name:"TV d\'orange Cote d\'Ivoire",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp83",name:"Cote Ouest Audiovisuel",country:"Cote D\'Ivoire",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp84",name:"Camara Ethiopia",country:"Ethiopia",status:"Contracting",engagement:"Entry",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"TVs/radio, Computers",notes:""},
+{id:"sp85",name:"Partners in Education Ethiopia",country:"Ethiopia",status:"Contracting",engagement:"Entry",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp86",name:"World Vision Ethiopia",country:"Ethiopia",status:"Contracting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp87",name:"Data Cup Niger",country:"Niger",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Emilie Chary",email:"emilie.chary@mind-and-go.com",phone:"+33 9 72 63 99 10",reach:2000,sessions:0,equipment:"N/A",notes:""},
+{id:"sp88",name:"Sabre Education Ghana",country:"Ghana",status:"Prospecting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp89",name:"Soronko Academy Ghana",country:"Ghana",status:"Contracting",engagement:"Penetration",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp90",name:"Right to Play Ghana",country:"Ghana",status:"Contracting",engagement:"Growth",mou:"In Progress",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp91",name:"Ambani Africa",country:"South Africa",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Isabella Mothobi",email:"isabella@ambaniafrica.com",phone:"",reach:0,sessions:0,equipment:"N/A",notes:"Partner yet to set up distribution"},
+{id:"sp92",name:"PecoPower",country:"South Africa",status:"Stewardship",engagement:"Entry",mou:"Signed",contact:"Rodney Landsberg",email:"rlandsberg@pecopower.co.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:"Partner yet to set up distribution"},
+{id:"sp93",name:"Ischool Africa",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"erna@ischoolafrica.com",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp94",name:"Axium Education",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"info@axiumeducation.org",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp95",name:"Curious Learning",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp96",name:"Vodacom Foundation",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp97",name:"Grassroot Educare Trust",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"info@grassroots.org.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp98",name:"DG Murray Trust",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"info@dgmt.co.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp99",name:"Nal ibali",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp100",name:"The Learning Trust",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp101",name:"ClickLearning",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"info@thelearningtrust.org",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp102",name:"OURS",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"admin@thatsours.co.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp103",name:"Grow ECD",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"lyndseypetro@growecd.org.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp104",name:"Wordworks",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"info@wordworks.org.za",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp105",name:"Western Cape Education Department",country:"South Africa",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp106",name:"CNPBM Cameroon",country:"Cameroon",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"infos@cnpbm.cm",phone:"+237 2 22 22 87 93",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp107",name:"SINAC Cameroon",country:"Cameroon",status:"Initiating",engagement:"Penetration",mou:"In Progress",contact:"Yolande Bodiong",email:"yolandebodiong@yahoo.fr",phone:"+237 99656458",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp108",name:"Tanzania ECEC",country:"Tanzania",status:"Stewardship",engagement:"Penetration",mou:"Expired",contact:"Elizabeth Joel Elphas",email:"",phone:"255745739531",reach:0,sessions:0,equipment:"Yes",notes:"Renewing"},
+{id:"sp109",name:"Cheliva Foundation",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Expired",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp110",name:"Yovodea Foundation",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Expired",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp111",name:"The Nancy Foundation",country:"Tanzania",status:"Contracting",engagement:"Penetration",mou:"Expired",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp112",name:"World Vision Tanzania",country:"Tanzania",status:"Stewardship",engagement:"Growth",mou:"Sent",contact:"Francis",email:"",phone:"255759699732",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp113",name:"Christian Social Service Commission",country:"Tanzania",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Joshua",email:"jmoshi@cssc.or.tz",phone:"255754247533",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp114",name:"The Georgina Foundation",country:"Tanzania",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Mary",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp115",name:"Shule Direct",country:"Tanzania",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Jennifer",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp116",name:"Camara Foundation Tanzania",country:"Tanzania",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Dayani",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp117",name:"KESU",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Signed",contact:"Lameck Kiula",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:"Renewing"},
+{id:"sp118",name:"BIDII Tanzania",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Expired",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp119",name:"Shadaka Foundation",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Expired",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp120",name:"Banda Jamii",country:"Tanzania",status:"Stewardship",engagement:"Entry",mou:"Renewed",contact:"Mbaki Mutahaba",email:"mbaki@zutrax.co.tz",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp121",name:"Uwezo Foundation",country:"Tanzania",status:"Contracting",engagement:"Entry",mou:"Sent",contact:"Brenda",email:"",phone:"",reach:65000,sessions:0,equipment:"Yes",notes:"MOU to be updated to Open ended"},
+{id:"sp122",name:"Femina Hip",country:"Tanzania",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"Yes",notes:""},
+{id:"sp123",name:"Pact Foundation",country:"Tanzania",status:"Contracting",engagement:"Growth",mou:"Sent",contact:"",email:"",phone:"",reach:10000,sessions:0,equipment:"Yes",notes:""},
+{id:"sp124",name:"FORCOM",country:"Mozambique",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp125",name:"Institute of Social Communication ICS",country:"Mozambique",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp126",name:"SST Mozambique",country:"Mozambique",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp127",name:"Right to Play Mozambique",country:"Mozambique",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp128",name:"World Vision Mozambique",country:"Mozambique",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp129",name:"World Vision Angola",country:"Angola",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp130",name:"ADPP Angola",country:"Angola",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp131",name:"SOS Children\'s Villages Angola",country:"Angola",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp132",name:"Africell Angola",country:"Angola",status:"Prospecting",engagement:"Entry",mou:"",contact:"",email:"apoio.cliente@africell.ao",phone:"",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp133",name:"WIDO By Orange Senegal",country:"Senegal",status:"Initiating",engagement:"Penetration",mou:"In Progress",contact:"Caroline Bouna DIA",email:"carolinebouna.dia@orange-sonatel.com",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp134",name:"Dakar Court",country:"Senegal",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"dakarcourtfestival@gmail.com",phone:"+221 77 666 65 60",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp135",name:"RAES Senegal",country:"Senegal",status:"Prospecting",engagement:"Entry",mou:"In Progress",contact:"",email:"contact@ongraes.org",phone:"+221 33 842 65 15",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp136",name:"ARED Senegal",country:"Senegal",status:"Prospecting",engagement:"Penetration",mou:"In Progress",contact:"",email:"ared@ared-edu.org",phone:"+221 33 825 71 19",reach:0,sessions:0,equipment:"",notes:""},
+{id:"sp137",name:"UNICEF Madagascar",country:"Madagascar",status:"Initiating",engagement:"Penetration",mou:"In Progress",contact:"Miary Nissi Rafidimaharo",email:"mrafidimaharo@unicef.org",phone:"",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp138",name:"PAV EDUC by UNIVERSEL GROUPE SARL",country:"Burkina Faso",status:"Contracting",engagement:"Entry",mou:"In Progress",contact:"Ben NACRO",email:"universelgroup@gmail.com",phone:"+226 67 40 65 78",reach:0,sessions:0,equipment:"N/A",notes:""},
+{id:"sp139",name:"CENET",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:620,sessions:5,equipment:"TV, Projector, Tablets",notes:"Rhino Camp, Uganda"},
+{id:"sp140",name:"CHIPO",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:1200,sessions:0,equipment:"Laptop/Computer/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp141",name:"YTT",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:150,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp142",name:"HIMPSO",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:452,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp143",name:"YIDA",country:"Children in Conflict",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"James Gihoma",email:"",phone:"",reach:18000,sessions:0,equipment:"TV, Projector, Tablets",notes:"Kyaka II Camp, Uganda"},
+{id:"sp144",name:"Tomorrow Vijana",country:"Children in Conflict",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Mathias Rukira",email:"",phone:"",reach:16570,sessions:0,equipment:"TV, Projector, Tablets",notes:"Rwamwanja Camp, Uganda"},
+{id:"sp145",name:"Nakivale ECD Consortium",country:"Children in Conflict",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"Sedric",email:"",phone:"",reach:6750,sessions:0,equipment:"TV, Projector, Tablets",notes:"Nakivale Camp, Uganda"},
+{id:"sp146",name:"CIYOTA",country:"Children in Conflict",status:"Stewardship",engagement:"Growth",mou:"Signed",contact:"",email:"",phone:"",reach:2200,sessions:0,equipment:"TV, Projector",notes:"Kyangwali Camp, Uganda"},
+{id:"sp147",name:"YFPI Uganda",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:210,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp148",name:"CETA",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:125,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp149",name:"Youth for Peace Initiative",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:325,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp150",name:"CMRF",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:165,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp151",name:"ALLVOX",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:630,sessions:0,equipment:"Laptop/Tablet",notes:"Rhino Camp, Uganda"},
+{id:"sp152",name:"Rural Uplift Horizons",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:400,sessions:0,equipment:"Laptop/Tablet",notes:"Imvepi Camp, Uganda"},
+{id:"sp153",name:"YEFORD",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:430,sessions:0,equipment:"Laptop/Tablet",notes:"Imvepi Camp, Uganda"},
+{id:"sp154",name:"WARDI",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:650,sessions:0,equipment:"Laptop/Tablet",notes:"Imvepi Camp, Uganda"},
+{id:"sp155",name:"Uganda Community Libraries Association",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"Catherine",email:"",phone:"",reach:5600,sessions:0,equipment:"TV, Projector, Tablets",notes:"Kampala, Uganda"},
+{id:"sp156",name:"Youth Empowerment Network YEN",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:245,sessions:0,equipment:"",notes:"Imvepi Camp, Uganda"},
+{id:"sp157",name:"Lutheran World Federation Kakuma",country:"Children in Conflict",status:"Contracting",engagement:"Entry",mou:"In Progress",contact:"",email:"",phone:"",reach:565,sessions:0,equipment:"Laptop/Tablet",notes:"Kakuma, Kenya"},
+{id:"sp158",name:"Ato Turkana Helping Hand",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:320,sessions:0,equipment:"",notes:"Kakuma, Kenya"},
+{id:"sp159",name:"Lead the Child",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:750,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp160",name:"Kalobeyi Youth Integrated",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:326,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp161",name:"United Safe Environment",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:125,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp162",name:"Kakuma Vocational Centre",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:232,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp163",name:"HSD Kakuma",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:332,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp164",name:"Wings to Fly",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:435,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp165",name:"Faulu Productions",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:540,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp166",name:"VDPA Voice for Disability People",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:90,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp167",name:"Action Pour le Progress",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:120,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp168",name:"Turkana Needy Children Home CBO",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:430,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp169",name:"FARMING AND HEALTH EDUCATION",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:230,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp170",name:"STOP CHILD ABUSE SCA",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:125,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Kakuma, Kenya"},
+{id:"sp171",name:"Vision for Humanity",country:"Children in Conflict",status:"Stewardship",engagement:"Penetration",mou:"Signed",contact:"",email:"",phone:"",reach:1245,sessions:0,equipment:"TV, Solar Panels, Laptops",notes:"Arua, Uganda"}
+];
+
+const ALL_COUNTRIES=['Tanzania','Kenya','Uganda','Rwanda','Malawi','Zambia','Nigeria','DRC',"Cote D'Ivoire",'Ethiopia','Niger','Ghana','South Africa','Cameroon','Mozambique','Angola','Senegal','Madagascar','Burkina Faso','Children in Conflict'];
+
+const UK='lmr26u',SK='lmr26s';
+let liveData=null;
+let users=JSON.parse(localStorage.getItem(UK)||'[]');
+let partners=[];
+let session=JSON.parse(localStorage.getItem(SK)||'null');
+let charts={};
+
+function allPartners(){
+  const manual=partners;
+  const sheetIds=new Set(manual.map(p=>p.name.toLowerCase()));
+  return [...manual,...SHEET_PARTNERS.filter(p=>!sheetIds.has(p.name.toLowerCase()))];
+}
+
+function hintRole(){const e=document.getElementById('le').value.trim().toLowerCase();const r=resolveRole(e);document.getElementById('roleHint').textContent=r?'Role: '+r:'';}
+function syncRole(){const e=document.getElementById('re').value.trim().toLowerCase();document.getElementById('rr').value=resolveRole(e)||'Not authorised (needs @ubongo.org)';}
+function toggleAuth(m){document.getElementById('lf').style.display=m==='login'?'block':'none';document.getElementById('rf').style.display=m==='reg'?'block':'none';document.getElementById('ae').textContent='';}
+function authErr(m){document.getElementById('ae').textContent=m}
+
+function doLogin(){
+  const email=document.getElementById('le').value.trim().toLowerCase(),pass=document.getElementById('lp').value.trim();
+  if(!email||!pass){authErr('Enter your email and passcode.');return}
+  const user=users.find(u=>u.email===email&&u.pass===pass);
+  if(!user){authErr('Incorrect credentials. Try again or create an account.');return}
+  session=user;localStorage.setItem(SK,JSON.stringify(session));loadDash();
+}
+function doRegister(){
+  const name=document.getElementById('rn').value.trim(),email=document.getElementById('re').value.trim().toLowerCase(),pass=document.getElementById('rp').value.trim();
+  if(!name||!email||!pass){authErr('All fields required.');return}
+  if(!/^\d{4}$/.test(pass)){authErr('Passcode must be exactly 4 digits.');return}
+  if(!resolveRole(email)){authErr('Only @ubongo.org email addresses can register.');return}
+  if(users.find(u=>u.email===email)){authErr('Account already exists. Sign in instead.');return}
+  const user={id:Date.now(),name,email,role:ALLOWED[email],pass};
+  users.push(user);localStorage.setItem(UK,JSON.stringify(users));
+  session=user;localStorage.setItem(SK,JSON.stringify(session));loadDash();
+}
+function doLogout(){
+  session=null;localStorage.removeItem(SK);
+  clearLockTimer();
+  document.getElementById('lockScreen').style.display='none';
+  document.getElementById('dashboardScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+  Object.values(charts).forEach(c=>{try{c.destroy()}catch(e){}});charts={};
+}
+
+// ── AUTO-LOCK ─────────────────────────────────────────
+const IDLE_MS = 5 * 60 * 1000; // 5 minutes idle
+const BLUR_MS = 2 * 60 * 1000; // 2 minutes after tab loses focus
+let idleTimer=null, blurTimer=null, isLocked=false;
+
+function lockDash(reason){
+  if(!session||isLocked) return;
+  isLocked=true;
+  const ls=document.getElementById('lockScreen');
+  document.getElementById('lockMsg').textContent=reason||'Enter your passcode to continue';
+  document.getElementById('lockEmail').textContent=session.email;
+  document.getElementById('lockPin').value='';
+  document.getElementById('lockErr').textContent='';
+  ls.style.display='flex';
+  setTimeout(()=>document.getElementById('lockPin').focus(),100);
+}
+
+function doUnlock(){
+  const pin=document.getElementById('lockPin').value.trim();
+  if(!pin){document.getElementById('lockErr').textContent='Enter your passcode.';return}
+  const users=JSON.parse(localStorage.getItem(UK)||'[]');
+  const ok=users.find(u=>u.email===session.email&&u.pass===pin);
+  if(!ok){document.getElementById('lockErr').textContent='Incorrect passcode. Try again.';document.getElementById('lockPin').value='';return}
+  isLocked=false;
+  document.getElementById('lockScreen').style.display='none';
+  resetLockTimer();
+}
+
+function resetLockTimer(){
+  clearLockTimer();
+  if(!session) return;
+  idleTimer=setTimeout(()=>lockDash('Locked after 5 minutes of inactivity'),IDLE_MS);
+}
+
+function clearLockTimer(){
+  if(idleTimer) clearTimeout(idleTimer);
+  if(blurTimer) clearTimeout(blurTimer);
+  idleTimer=null; blurTimer=null;
+}
+
+// Reset idle timer on any user activity
+['mousemove','keydown','mousedown','touchstart','scroll'].forEach(ev=>{
+  document.addEventListener(ev,()=>{ if(session&&!isLocked) resetLockTimer(); },{passive:true});
+});
+
+// Lock when tab loses focus (after 2 min)
+document.addEventListener('visibilitychange',()=>{
+  if(!session) return;
+  if(document.hidden){
+    blurTimer=setTimeout(()=>lockDash('Locked after leaving the tab'),BLUR_MS);
+  } else {
+    if(blurTimer){ clearTimeout(blurTimer); blurTimer=null; }
+  }
+});
+
+// Lock on window blur (switching apps)
+window.addEventListener('blur',()=>{
+  if(!session||isLocked) return;
+  blurTimer=setTimeout(()=>lockDash('Locked after leaving the window'),BLUR_MS);
+});
+window.addEventListener('focus',()=>{
+  if(blurTimer){ clearTimeout(blurTimer); blurTimer=null; }
+});
+function loadDash(){
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('dashboardScreen').classList.add('active');
+  const init=session.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('uav').textContent=init;
+  document.getElementById('uname').textContent=session.name;
+  document.getElementById('urole').textContent=session.role||resolveRole(session.email)||'Manager';
+
+  document.getElementById('ovSub').textContent='As of '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  renderOverview();buildCountryGrid();renderPartners();populateFilters();
+  isLocked=false;resetLockTimer();
+  // Load live data from Google Sheet (async — updates UI when ready)
+  loadLiveData(false);
+}
+
+
+// ── CSV PARSER ────────────────────────────────────────
+function parseCSV(text){
+  const rows=[];
+  let cur='',inQ=false,row=[];
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(ch==='"'){if(inQ&&text[i+1]==='"'){cur+='"';i++}else{inQ=!inQ}}
+    else if(ch===','&&!inQ){row.push(cur.trim());cur=''}
+    else if((ch==='\n'||ch==='\r')&&!inQ){
+      if(cur||row.length){row.push(cur.trim());rows.push(row)}
+      cur='';row=[];if(ch==='\r'&&text[i+1]==='\n')i++;
+    }else{cur+=ch}
+  }
+  if(cur||row.length){row.push(cur.trim());rows.push(row)}
+  return rows;
+}
+function numClean(s){return Number(String(s||'0').replace(/[^0-9.\-]/g,''))||0;}
+
+async function fetchTab(tabName){
+  const gid=SHEET_TABS[tabName];
+  if(!gid){console.warn('No GID for',tabName);return[];}
+  try{
+    const r=await fetch(csvUrl(gid),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return parseCSV(await r.text());
+  }catch(e){console.error('fetchTab failed:',tabName,e);return[];}
+}
+
+function parseDashTab(rows){
+  const hIdx=rows.findIndex(r=>r.some(c=>/goal/i.test(c)));
+  if(hIdx<0||!rows.length) return{items:[],totalGoal:0,totalReach:0};
+  const h=rows[hIdx]||[];
+  const iGoal=h.findIndex((c,i)=>i>1&&/goal/i.test(c)&&!/remaining/i.test(c));
+  const iReach=h.findIndex((c,i)=>i>1&&/reach|kids/i.test(c)&&!/goal|remaining/i.test(c));
+  const iNotes=h.findIndex(c=>/notes/i.test(c));
+  let totalGoal=0,totalReach=0;
+  const items=[];
+  rows.slice(hIdx+1).forEach(r=>{
+    const label=(r[0]||'').trim();
+    if(!label||/^all$|^total$/i.test(label)) return;
+    const goal=numClean(iGoal>=0?r[iGoal]:r[2]);
+    const reach=numClean(iReach>=0?r[iReach]:r[3]);
+    const partner=(r[1]||'Ubongo').trim();
+    const notes=iNotes>=0?(r[iNotes]||''):'';
+    items.push({c:label,p:partner,goal,reach,notes});
+    totalGoal+=goal;totalReach+=reach;
+  });
+  return{items,totalGoal,totalReach};
+}
+
+function parseCountryTab(rows,tabName){
+  if(!rows||!rows.length) return{total:0,partners:[]};
+  const hIdx=rows.findIndex(r=>r.some(c=>/org|partner|name|school|radio|reach|kids/i.test(c)));
+  if(hIdx<0) return{total:0,partners:[]};
+  const h=rows[hIdx];
+  const iReach=h.findIndex(c=>/^reach$|number.*reach|kids reached|children reached/i.test(c));
+  const iStatus=h.findIndex(c=>/^status$/i.test(c));
+  const iMOU=h.findIndex(c=>/mou/i.test(c));
+  const iContact=h.findIndex(c=>/contact/i.test(c));
+  const iEmail=h.findIndex(c=>/^email$/i.test(c));
+  const iPhone=h.findIndex(c=>/phone|tel/i.test(c));
+  const iEngagement=h.findIndex(c=>/engagement|level/i.test(c));
+  const iNotes=h.findIndex(c=>/notes/i.test(c));
+  const iEquip=h.findIndex(c=>/equip/i.test(c));
+  let total=0;
+  const partners=[];
+  rows.slice(hIdx+1).forEach((r,i)=>{
+    const name=(r[0]||'').trim();
+    if(!name||/^organisation$|^name$|^partner$/i.test(name)) return;
+    const reach=numClean(iReach>=0?r[iReach]:0);
+    total+=reach;
+    partners.push({
+      id:'live_'+tabName.replace(/\s/g,'_')+'_'+i,
+      name,country:tabName,reach,
+      status:iStatus>=0?(r[iStatus]||''):'',
+      mou:iMOU>=0?(r[iMOU]||''):'',
+      contact:iContact>=0?(r[iContact]||''):'',
+      email:iEmail>=0?(r[iEmail]||''):'',
+      phone:iPhone>=0?(r[iPhone]||''):'',
+      engagement:iEngagement>=0?(r[iEngagement]||''):'',
+      notes:iNotes>=0?(r[iNotes]||''):'',
+      equipment:iEquip>=0?(r[iEquip]||''):'',
+      sessions:0,fromSheet:true,
+    });
+  });
+  return{total,partners};
+}
+
+const CACHE_KEY='lmr26_live_v2';
+const CACHE_TTL=30*60*1000;
+
+async function loadLiveData(forceRefresh=false){
+  setDataStatus('loading');
+  if(!forceRefresh){
+    try{
+      const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+      if(c&&Date.now()-c.ts<CACHE_TTL){
+        liveData=c.data;setDataStatus('cached',c.ts);applyLiveData();return;
+      }
+    }catch(e){}
+  }
+  try{
+    const btn=document.getElementById('refreshBtn');
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i>Fetching...';}
+    const [dashRows,...countryRowsArr]=await Promise.all([
+      fetchTab('2026 Dashboard'),
+      ...ALL_COUNTRIES.map(t=>fetchTab(t))
+    ]);
+    const dash=parseDashTab(dashRows);
+    const countryData={};
+    ALL_COUNTRIES.forEach((t,i)=>{countryData[t]=parseCountryTab(countryRowsArr[i],t);});
+    liveData={dash,countryData,ts:Date.now()};
+    localStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),data:liveData}));
+    setDataStatus('live');
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-refresh"></i>Refresh';}
+  }catch(e){
+    console.error('Live fetch failed:',e);
+    setDataStatus('offline');
+    const btn=document.getElementById('refreshBtn');
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-refresh"></i>Refresh';}
+  }
+  applyLiveData();
+}
+
+function setDataStatus(state,ts){
+  const dot=document.getElementById('dataDot');
+  const txt=document.getElementById('dataStatus');
+  if(!dot||!txt) return;
+  const colors={live:'var(--green)',cached:'var(--amber)',loading:'var(--g300)',offline:'var(--red)'};
+  const labels={
+    live:'Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    cached:'Cached · '+new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    loading:'Fetching from Google Sheet...',
+    offline:'Offline — showing last saved data'
+  };
+  dot.style.background=colors[state]||'var(--g300)';
+  txt.textContent=labels[state]||'';
+}
+
+function applyLiveData(){
+  if(!liveData) return;
+  // Replace ROWS2026 with live dashboard data
+  if(liveData.dash&&liveData.dash.items&&liveData.dash.items.length>0){
+    ROWS2026.length=0;
+    liveData.dash.items.forEach(item=>ROWS2026.push(item));
+  }
+  // Replace SHEET_PARTNERS with live country tab data
+  SHEET_PARTNERS.length=0;
+  ALL_COUNTRIES.forEach(t=>{
+    const cd=liveData.countryData[t];
+    if(cd&&cd.partners) cd.partners.forEach(p=>SHEET_PARTNERS.push(p));
+  });
+  // Recompute conflict reach from live data
+  window.LIVE_CONFLICT_REACH=SHEET_PARTNERS
+    .filter(p=>p.country==='Children in Conflict')
+    .reduce((s,p)=>s+p.reach,0);
+  // Re-render everything with live data
+  renderOverview();buildCountryGrid();renderPartners();populateFilters();
+}
+
+const PIE_COLORS=['#1D9E75','#378ADD','#EF9F27','#9B59B6','#E24B4A','#1ABC9C','#E67E22','#3498DB','#E91E63','#00BCD4','#FF5722','#607D8B','#8BC34A','#FF9800','#795548','#9C27B0','#F44336','#2196F3','#4CAF50','#D35400'];
+
+function getCountryTotals(){
+  const t={};
+  // Ensure ALL countries appear (even at 0) using goals
+  ROWS2026.forEach(r=>{
+    const key=r.c.startsWith('Children in Conflict')?'Children in Conflict':r.c;
+    if(!t[key]) t[key]=0;
+    t[key]+=r.reach;
+  });
+  ALL_COUNTRIES.forEach(c=>{ if(!(c in t)) t[c]=0; });
+  // Layer in partner reach from sheet
+  SHEET_PARTNERS.forEach(p=>{if(p.reach>0)t[p.country]=(t[p.country]||0)+p.reach});
+  return t;
+}
+
+function renderOverview(){
+  const totals=getCountryTotals();
+  const totalReach=Object.values(totals).reduce((s,v)=>s+v,0);
+  const pct=GOAL2026>0?((totalReach/GOAL2026)*100).toFixed(1):0;
+  const rem=Math.max(0,GOAL2026-totalReach);
+  const totalGoal=ROWS2026.reduce((s,r)=>s+r.goal,0);
+  const conflictTotal=totals['Children in Conflict']||0;const lastMile=Math.max(0,totalReach-conflictTotal);
+  const liveConflict=window.LIVE_CONFLICT_REACH!==undefined?window.LIVE_CONFLICT_REACH:CONFLICT_REACH;
+
+  document.getElementById('mGrid').innerHTML=[
+    {l:'2026 end year goal',v:fmt(GOAL2026),s:'10% last mile growth target'},
+    {l:'2026 programme target',v:fmt(totalGoal),s:'sum of all country goals'},
+    {l:'Actual reach to date',v:fmt(totalReach),s:pct+'% of programme target',badge:pct+'%'},
+    {l:'Last mile reach',v:fmt(lastMile),s:'communities & schools'},
+    {l:'Children in conflict',v:fmt(liveConflict),s:SHEET_PARTNERS.filter(p=>p.country==='Children in Conflict').length+' partner orgs'},
+    {l:'2025 baseline',v:fmt(BASELINE2025),s:'verified end-year figure'},
+  ].map(m=>`<div class="mc"><div class="ml">${m.l}</div><div class="mv">${m.v}</div>${m.badge?`<div class="mbg ${Number(m.badge)>=80?'tg':Number(m.badge)>=40?'ta':'tb'}">${m.badge}</div>`:''}<div class="ms">${m.s}</div></div>`).join('');
+
+  document.getElementById('progLbl').textContent=pct+'%';
+  document.getElementById('progBar').style.width=Math.min(pct,100)+'%';
+  document.getElementById('progRem').textContent=rem>0?fmt(rem)+' children remaining to reach':'Goal achieved!';
+
+  document.getElementById('ovTbody').innerHTML=ROWS2026.map(r=>{
+    const rm=r.goal-r.reach;
+    const st=r.reach>=r.goal&&r.goal>0?'<span class="tag tg">Exceeded</span>':r.reach>0?'<span class="tag ta">In progress</span>':'<span class="tag tgr">Not started</span>';
+    return`<tr><td>${r.c}</td><td style="font-weight:500">${r.p}</td><td>${fmt(r.goal)}</td><td style="font-weight:600">${fmt(r.reach)}</td><td style="color:${rm<0?'var(--green)':rm>0?'#7A5000':'var(--g400)'}">${rm<0?'+'+fmt(Math.abs(rm))+' surplus':rm===0?'&mdash;':fmt(rm)}</td><td>${st}</td></tr>`;
+  }).join('');
+
+  // Partner target 2028 section
+  const totalP=allPartners().length;
+  const TARGET_PARTNERS=1000;
+  const pPct=Math.min((totalP/TARGET_PARTNERS*100),100).toFixed(1);
+  const pRem=Math.max(0,TARGET_PARTNERS-totalP);
+  const byStatus={Stewardship:0,Contracting:0,Initiating:0,Prospecting:0,'No Progress':0};
+  allPartners().forEach(p=>{ if(byStatus[p.status]!==undefined) byStatus[p.status]++; else byStatus['No Progress']++; });
+  document.getElementById('partnerTargetCard').innerHTML=`
+    <div class="ctitle">Partner target 2028</div>
+    <div style="display:flex;align-items:flex-end;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
+      <div>
+        <div style="font-size:36px;font-weight:600;font-family:var(--mono);color:var(--green);line-height:1">${totalP}</div>
+        <div style="font-size:13px;color:var(--g500);margin-top:3px">of ${TARGET_PARTNERS.toLocaleString()} target partners</div>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--g500);margin-bottom:5px">
+          <span>${pPct}% to 2028 goal</span><span>${pRem} still to recruit</span>
+        </div>
+        <div class="pb" style="height:10px"><div class="pf" style="width:${pPct}%"></div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${Object.entries(byStatus).map(([s,n])=>n>0?`<div style="display:flex;align-items:center;gap:5px;background:var(--g50);border:1px solid var(--g200);border-radius:6px;padding:4px 10px;font-size:12px">${stag(s)}<span style="font-family:var(--mono);font-weight:600">${n}</span></div>`:'').join('')}
+    </div>`;
+  setTimeout(()=>buildCharts(totals,lastMile),80);
+}
+
+function buildCharts(totals,lastMile){
+  const sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  const withReach=sorted.filter(([,v])=>v>0);
+  const top6=(withReach.length>0?withReach:sorted).slice(0,8);
+  const conflict=CONFLICT_REACH;
+
+  if(charts.c){try{charts.c.destroy()}catch(e){}}
+  const c1=document.getElementById('cChart');
+  if(c1&&top6.length){
+    charts.c=new Chart(c1,{type:'bar',data:{labels:top6.map(([c])=>c),datasets:[{label:'Reached',data:top6.map(([,v])=>v),backgroundColor:'#1D9E75',borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>v>=1000?(v/1000).toFixed(0)+'K':v,font:{size:10,family:'DM Mono'}},grid:{color:'rgba(0,0,0,0.04)'}},y:{ticks:{font:{size:11}}}}}});
+  }
+
+  if(charts.b){try{charts.b.destroy()}catch(e){}}
+  const c2=document.getElementById('bChart');
+  if(c2){
+    const lm=Math.max(lastMile,1);
+    charts.b=new Chart(c2,{type:'doughnut',data:{labels:['Last mile','Children in conflict'],datasets:[{data:[lm,Math.max(conflict,1)],backgroundColor:['#1D9E75','#378ADD'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+    document.getElementById('bLeg').innerHTML=`<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75"></span>Last mile (${fmt(lm)})</span><span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD"></span>Conflict (${fmt(conflict)})</span>`;
+  }
+
+  if(charts.p){try{charts.p.destroy()}catch(e){}}
+  const c3=document.getElementById('pChart');
+  const pieData=sorted.filter(([,v])=>v>0);
+  if(c3&&pieData.length){
+    const labels=pieData.map(([c])=>c),data=pieData.map(([,v])=>v),colors=labels.map((_,i)=>PIE_COLORS[i%PIE_COLORS.length]);
+    charts.p=new Chart(c3,{type:'pie',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+    const tot=data.reduce((a,b)=>a+b,0);
+    document.getElementById('pLeg').innerHTML=pieData.map(([l,v],i)=>`<span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:${colors[i]};flex-shrink:0"></span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l}</span><span style="font-family:var(--mono);font-size:11px;color:var(--g600);white-space:nowrap">${fmt(v)} (${((v/tot)*100).toFixed(1)}%)</span></span>`).join('');
+  }
+}
+
+function buildCountryGrid(){
+  const goals={};
+  ROWS2026.forEach(r=>{
+    const key=r.c.startsWith('Children in Conflict')?'Children in Conflict':r.c;
+    goals[key]=(goals[key]||0)+r.goal;
+  });
+  document.getElementById('cGrid').innerHTML=ALL_COUNTRIES.map(c=>{
+    const cP=SHEET_PARTNERS.filter(p=>p.country===c);
+    const reach=cP.reduce((s,p)=>s+p.reach,0);
+    const goal=goals[c]||0;
+    const pct=goal>0?Math.min((reach/goal*100),200).toFixed(0):0;
+    const isC=c==='Children in Conflict';
+    return`<div class="cc" onclick="showCountry('${c.replace(/'/g,"\\'")}')">
+      ${isC?'<div style="margin-bottom:4px"><span class="tag tb">Cross-market</span></div>':''}
+      <div class="ccn">${c}</div>
+      <div class="ccr">${fmt(reach)}</div>
+      <div class="ccg">Goal: ${fmt(goal)} &middot; ${cP.length} org${cP.length!==1?'s':''} registered</div>
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin-bottom:3px"><span>Partner reach</span><span>${fmt(reach)}</span></div>
+        <div class="pb" style="height:5px"><div class="pf" style="width:${Math.min(Number(pct),100)}%;${isC?'background:var(--blue)':''}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showCountry(name){
+  const rows=ROWS2026.filter(r=>r.c===name||r.c.startsWith('Children in Conflict')&&name==='Children in Conflict');
+  const cP=SHEET_PARTNERS.filter(p=>p.country===name);
+  const totalReach=cP.reduce((s,p)=>s+p.reach,0);
+  const totalGoal=rows.reduce((s,r)=>s+r.goal,0);
+  const pct=totalGoal>0?((totalReach/totalGoal)*100).toFixed(1):0;
+  const rem=Math.max(0,totalGoal-totalReach);
+  const isC=name==='Children in Conflict';
+  document.getElementById('cListView').style.display='none';
+  document.getElementById('cDetailView').style.display='block';
+  document.getElementById('cDetailContent').innerHTML=`
+    <div class="ph"><div><div class="ptitle">${name}</div><div class="psub">${isC?'Cross-market conflict & refugee settings':'Country dashboard'}</div></div></div>
+    <div class="mg">
+      <div class="mc"><div class="ml">2026 goal</div><div class="mv">${fmt(totalGoal)}</div></div>
+      <div class="mc"><div class="ml">Partner reach</div><div class="mv">${fmt(totalReach)}</div><div class="ms">${cP.length} partners</div></div>
+      <div class="mc"><div class="ml">Remaining</div><div class="mv">${fmt(rem)}</div></div>
+      <div class="mc"><div class="ml">Registered orgs</div><div class="mv">${cP.length}</div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--g500)">Partner reach vs goal</span><span style="font-size:12px;font-weight:600">${pct}%</span></div>
+      <div class="pb"><div class="pf" style="width:${Math.min(pct,100)}%;${isC?'background:var(--blue)':''}"></div></div>
+    </div>
+    ${rows.length>0?`<div class="card"><div class="ctitle">2026 programme targets</div><div class="tw"><table><thead><tr><th>Programme</th><th>Goal</th><th>Reached</th><th>Remaining</th></tr></thead>
+    <tbody>${rows.map(r=>{const rm=r.goal-r.reach;return`<tr><td style="font-weight:500">${r.p}</td><td>${fmt(r.goal)}</td><td>${fmt(r.reach)}</td><td style="color:${rm<0?'var(--green)':rm>0?'#7A5000':'var(--g400)'}">${rm<0?'+'+fmt(Math.abs(rm))+' surplus':rm===0?'&mdash;':fmt(rm)}</td></tr>`;}).join('')}</tbody></table></div></div>`:''}
+    <div class="card"><div class="ctitle">Partner organisations (${cP.length})</div>
+    ${cP.length===0?`<div class="empty" style="padding:1.5rem"><i class="ti ti-building-plus"></i>No partners yet for ${name}</div>`:`<div class="tw"><table><thead><tr><th>Organisation</th><th>Status</th><th>MOU</th><th>Reach</th><th>Notes</th></tr></thead>
+    <tbody>${cP.map(p=>`<tr onclick="showPDetailFromCountry('${p.id}')" style="cursor:pointer"><td style="font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</td><td>${stag(p.status)}</td><td>${mtag(p.mou)}</td><td style="font-family:var(--mono)">${fmt(p.reach)}</td><td style="font-size:12px;color:var(--g500);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||'&mdash;'}</td></tr>`).join('')}</tbody></table></div>`}
+    </div>`;
+}
+function backToC(){document.getElementById('cListView').style.display='block';document.getElementById('cDetailView').style.display='none'}
+function showPDetailFromCountry(id){showPage('partners',document.querySelector('.ni:nth-child(3)'));showPDetail(id);}
+
+function populateFilters(){
+  const countries=[...new Set(SHEET_PARTNERS.map(p=>p.country))].sort();
+  const sel=document.getElementById('pcf');
+  if(sel) sel.innerHTML='<option value="">All countries</option>'+countries.map(c=>`<option>${c}</option>`).join('');
+}
+
+
+function renderPartners(){
+  const q=(document.getElementById('psearch')?.value||'').toLowerCase().trim();
+  const country=document.getElementById('pcf')?.value||'';
+  const status=document.getElementById('psf')?.value||'';
+  const all=allPartners();
+  const filtered=all.filter(p=>{
+    if(q){
+      const hay=[(p.name||''),(p.contact||''),(p.country||''),(p.notes||''),(p.email||'')].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    if(country&&p.country!==country) return false;
+    if(status&&p.status!==status) return false;
+    return true;
+  });
+  const el=document.getElementById('pListView');
+  if(!el) return;
+  const pc=document.getElementById('partnerCount');
+  if(pc) pc.textContent=filtered.length+' of '+all.length+' partners shown';
+  if(filtered.length===0){el.innerHTML='<div class="empty"><i class="ti ti-building-off"></i>No partners match your search.</div>';return}
+  el.innerHTML=filtered.map(p=>`<div class="sr" data-pid="${p.id}">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="min-width:0;flex:1">
+        <div style="font-weight:600;font-size:14px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</div>
+        <div style="font-size:12px;color:var(--g500)"><i class="ti ti-map-pin" style="font-size:12px"></i> ${p.country}${p.contact?' &nbsp;&middot;&nbsp; <i class="ti ti-user" style="font-size:12px"></i> '+p.contact:''}</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex-shrink:0">
+        ${stag(p.status)} ${p.mou?mtag(p.mou):''}
+        <span style="font-size:12px;font-family:var(--mono);color:var(--g600)">${p.reach>0?fmt(p.reach)+' kids':''}</span>
+      </div>
+    </div></div>`).join('');
+  // Use event delegation for reliable click handling
+  el.onclick=function(e){
+    const card=e.target.closest('[data-pid]');
+    if(card) showPDetail(card.dataset.pid);
+  };
+}
+
+function showPDetail(id){
+  const id_s=String(id);
+  const overrides=JSON.parse(localStorage.getItem('lmr26ov')||'{}');
+  const base=allPartners().find(x=>String(x.id)===id_s);if(!base) return;
+  const p={...base,...(overrides[id_s]||{})};
+  document.getElementById('pListView').style.display='none';
+  document.getElementById('pDetailView').style.display='block';
+  {
+    document.getElementById('pDetailView').innerHTML=`
+      <div class="bbk" onclick="closePDetail()"><i class="ti ti-arrow-left"></i>Search results</div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
+          <div>
+            <div style="font-size:18px;font-weight:600;margin-bottom:2px">${p.name}</div>
+            <div style="font-size:13px;color:var(--g500)">${p.country}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            ${stag(p.status)} ${p.mou?mtag(p.mou):''}
+
+          </div>
+        </div>
+        <div class="div"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13px">
+          <div><div class="fl">Contact person</div>${p.contact||'&mdash;'}</div>
+          <div><div class="fl">Email</div><span style="color:var(--blue)">${p.email||'&mdash;'}</span></div>
+          <div><div class="fl">Phone</div>${p.phone||'&mdash;'}</div>
+          <div><div class="fl">Engagement level</div>${etag(p.engagement)}</div>
+          <div><div class="fl">Children reached</div><span style="font-size:20px;font-weight:600;font-family:var(--mono);color:var(--green)">${fmt(p.reach)}</span></div>
+          <div><div class="fl">Sessions / week</div><span style="font-size:18px;font-weight:600;font-family:var(--mono)">${p.sessions||'&mdash;'}</span></div>
+          <div style="grid-column:1/-1"><div class="fl">Equipment provided</div>${p.equipment||'&mdash;'}</div>
+          ${p.notes?`<div style="grid-column:1/-1"><div class="fl">Notes</div><div style="color:var(--g600)">${p.notes}</div></div>`:''}
+        </div>
+
+      </div>`;
+  }
+}
+
+
+
+
+function closePDetail(){document.getElementById('pListView').style.display='block';document.getElementById('pDetailView').style.display='none'}
+
+
+
+
+
+
+
+function showPage(page,el,mob=0){
+  ['overview','countries','partners'].forEach(p=>document.getElementById('page-'+p).style.display=p===page?'block':'none');
+  if(el){const s=mob?'.mni':'.ni';document.querySelectorAll(s).forEach(b=>b.classList.remove('active'));el.classList.add('active')}
+  if(page==='partners')renderPartners();
+}
+function exportCSV(){
+  const all=allPartners();
+  const cols=['name','country','status','engagement','mou','contact','email','phone','reach','sessions','equipment','notes'];
+  const rows=[cols.join(','),...all.map(p=>cols.map(k=>{const v=String(p[k]||'');return v.includes(',')||v.includes('"')?'"'+v.replace(/"/g,'""')+'"':v;}).join(','))];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='LastMileReach_Partners_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+function exportSlides(){
+  const totals=getCountryTotals();
+  const totalReach=Object.values(totals).reduce((s,v)=>s+v,0);
+  const totalGoal=ROWS2026.reduce((s,r)=>s+r.goal,0);
+  const pct=GOAL2026>0?((totalReach/GOAL2026)*100).toFixed(1):0;
+  const conflict=totals['Children in Conflict']||0;
+  const lastMile=Math.max(0,totalReach-conflict);
+  const totalP=allPartners().length;
+  const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const topCountries=Object.entries(totals).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,6);
+
+  const slideHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>LastMileReach 2026 — Ubongo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:#212529}
+.slide{width:100%;min-height:100vh;padding:3rem;display:flex;flex-direction:column;page-break-after:always;border-bottom:2px dashed #E9ECEF}
+.s1{background:linear-gradient(140deg,#083D2C 0%,#1D9E75 100%);color:#fff}
+.s1 h1{font-size:3rem;font-weight:600;margin-bottom:0.5rem}
+.s1 p{font-size:1.1rem;opacity:0.8}
+.s1 .date{margin-top:auto;font-size:13px;opacity:0.6;padding-top:2rem}
+.stitle{font-size:11px;font-weight:600;color:#ADB5BD;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem}
+.s2 h2{font-size:2rem;font-weight:600;color:#0F6E56;margin-bottom:0.5rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:1.5rem 0}
+.kpi{background:#F8F9FA;border-radius:12px;padding:1.5rem;border-left:4px solid #1D9E75}
+.kpi.blue{border-left-color:#378ADD}
+.kpi.amber{border-left-color:#EF9F27}
+.kpi label{font-size:11px;font-weight:600;color:#868E96;text-transform:uppercase;display:block;margin-bottom:8px}
+.kpi .val{font-size:2.2rem;font-weight:600;font-family:'DM Mono',monospace;color:#212529;line-height:1}
+.kpi small{font-size:12px;color:#868E96;margin-top:4px;display:block}
+.pb{height:12px;background:#E9ECEF;border-radius:6px;overflow:hidden;margin:1.5rem 0}
+.pf{height:100%;background:#1D9E75;border-radius:6px}
+.ctable{width:100%;border-collapse:collapse;margin-top:1rem}
+.ctable th{text-align:left;padding:10px 14px;font-size:11px;font-weight:600;color:#868E96;text-transform:uppercase;border-bottom:2px solid #E9ECEF}
+.ctable td{padding:10px 14px;border-bottom:1px solid #F1F3F5;font-size:14px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{width:140px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:22px;background:#F1F3F5;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:#1D9E75;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;color:#fff;font-weight:600}
+.bar-fill.blue{background:#378ADD}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.tg{background:#E1F5EE;color:#0F6E56}.ta{background:#FAEEDA;color:#7A5000}.tgr{background:#F1F3F5;color:#495057}
+@media print{.slide{page-break-after:always;min-height:100vh}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide s1">
+  <div style="font-size:13px;opacity:0.6;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem">UBONGO</div>
+  <h1>LastMileReach 2026</h1>
+  <p>Progress Report &mdash; All Markets</p>
+  <div class="date">As of ${today}</div>
+</div>
+
+<!-- SLIDE 2: Key numbers -->
+<div class="slide s2">
+  <div class="stitle">Overall progress</div>
+  <h2>${Number(totalReach).toLocaleString()} children reached</h2>
+  <p style="color:#868E96;font-size:14px;margin-top:4px">${pct}% of 2026 end year goal (${Number(GOAL2026).toLocaleString()})</p>
+  <div class="pb"><div class="pf" style="width:${Math.min(pct,100)}%"></div></div>
+  <div class="grid3">
+    <div class="kpi"><label>Programme Target</label><div class="val">${Number(totalGoal).toLocaleString()}</div><small>sum of all country goals</small></div>
+    <div class="kpi blue"><label>Last Mile</label><div class="val">${Number(lastMile).toLocaleString()}</div><small>communities &amp; schools</small></div>
+    <div class="kpi amber"><label>Children in Conflict</label><div class="val">${Number(conflict).toLocaleString()}</div><small>refugee &amp; IDP settings</small></div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Country bar chart -->
+<div class="slide">
+  <div class="stitle">Reach by country — top markets</div>
+  <div style="margin-top:1rem">
+    ${topCountries.map(([c,v])=>{const max=topCountries[0][1]||1;const w=Math.round(v/max*100);return`<div class="bar-row"><div class="bar-label">${c}</div><div class="bar-track"><div class="bar-fill${c==='Children in Conflict'?' blue':''}" style="width:${w}%">${v>=1000?(v/1000).toFixed(0)+'K':v}</div></div><span style="font-size:13px;font-family:'DM Mono',monospace;width:70px;text-align:right">${Number(v).toLocaleString()}</span></div>`;}).join('')}
+  </div>
+</div>
+
+<!-- SLIDE 4: Partners -->
+<div class="slide">
+  <div class="stitle">Partner landscape</div>
+  <div style="display:flex;align-items:flex-end;gap:2rem;margin:1.5rem 0;flex-wrap:wrap">
+    <div>
+      <div style="font-size:4rem;font-weight:600;font-family:'DM Mono',monospace;color:#1D9E75;line-height:1">${totalP}</div>
+      <div style="color:#868E96;margin-top:6px">registered partners</div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#868E96;margin-bottom:6px"><span>Progress to 1,000 by 2028</span><span>${(totalP/1000*100).toFixed(1)}%</span></div>
+      <div class="pb"><div class="pf" style="width:${Math.min(totalP/1000*100,100)}%"></div></div>
+    </div>
+  </div>
+  <table class="ctable">
+    <thead><tr><th>Country</th><th>Partners</th><th>Children reached</th></tr></thead>
+    <tbody>
+      ${[...new Set(allPartners().map(p=>p.country))].sort().map(c=>{
+        const cP=allPartners().filter(p=>p.country===c);
+        const r=cP.reduce((s,p)=>s+p.reach,0);
+        return`<tr><td>${c}</td><td style="font-family:'DM Mono',monospace">${cP.length}</td><td style="font-family:'DM Mono',monospace;color:#1D9E75">${Number(r).toLocaleString()}</td></tr>`;
+      }).join('')}
+    </tbody>
+  </table>
+</div>
+
+</body></html>`;
+
+  const blob=new Blob([slideHTML],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='LastMileReach_2026_Slides_'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+function fmt(n){return Number(n||0).toLocaleString()}
+function stag(s){const m={Stewardship:'tg',Contracting:'tb',Initiating:'ta',Prospecting:'tgr','No Progress':'tr'};return`<span class="tag ${m[s]||'tgr'}">${s||'&mdash;'}</span>`}
+function mtag(m){const mp={Signed:'tg',Renewed:'tg','In Progress':'ta',Sent:'ta',Expired:'tgr',Contacted:'tgr','Not started':'tgr',Blocked:'tr',Ended:'tr'};return`<span class="tag ${mp[m]||'tgr'}">${m||'&mdash;'}</span>`}
+function etag(e){const m={Growth:'tg',Penetration:'ta',Entry:'tgr',Stewardship:'tb'};return`<span class="tag ${m[e]||'tgr'}">${e||'&mdash;'}</span>`}
+
+if(session) loadDash();
+</script>
+</body>
+</html>
